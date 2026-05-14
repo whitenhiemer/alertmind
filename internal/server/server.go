@@ -103,6 +103,9 @@ func (s *Server) process(payload *alert.AlertmanagerPayload) {
 			ProbableCause:      "alertmind could not generate triage — check logs.",
 			SeverityAssessment: payload.CommonLabels["severity"],
 		}
+	} else {
+		log.Printf("triage for %s: cause=%q actions=%d commands=%d",
+			alertName, triage.ProbableCause, len(triage.ImmediateActions), len(triage.InvestigationCommands))
 	}
 
 	if err := s.notifier.Notify(ctx, payload, triage); err != nil {
